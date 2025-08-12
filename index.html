@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/Legenda_4.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-7.634905520260399,111.04543157958122],[-6.418161804441973,113.02124476948819]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        map.createPane('pane_GoogleTerrain_1');
+        map.getPane('pane_GoogleTerrain_1').style.zIndex = 401;
+        var layer_GoogleTerrain_1 = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleTerrain_1',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleTerrain_1;
+        map.addLayer(layer_GoogleTerrain_1);
+        map.createPane('pane_GoogleHybrid_2');
+        map.getPane('pane_GoogleHybrid_2').style.zIndex = 402;
+        var layer_GoogleHybrid_2 = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleHybrid_2',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleHybrid_2;
+        map.addLayer(layer_GoogleHybrid_2);
+        map.createPane('pane_GoogleRoad_3');
+        map.getPane('pane_GoogleRoad_3').style.zIndex = 403;
+        var layer_GoogleRoad_3 = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleRoad_3',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleRoad_3;
+        map.addLayer(layer_GoogleRoad_3);
+        function pop_Legenda_4(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>Kabupaten/Kota</strong><br />' + (feature.properties['NAMOBJ'] !== null ? autolinker.link(feature.properties['NAMOBJ'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Indeks IKTL 2024</strong><br />' + (feature.properties['ikl'] !== null ? autolinker.link(feature.properties['ikl'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Kategori IKTL 2024</strong><br />' + (feature.properties['Kategori'] !== null ? autolinker.link(feature.properties['Kategori'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>foto</strong><br />' + (feature.properties['foto'] !== null ? '<img src="images/' + String(feature.properties['foto']).replace(/[\\\/:]/g, '_').trim() + '">' : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Legenda_4_0(feature) {
+            switch(String(feature.properties['NAMOBJ'])) {
+                case 'Bangkalan':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Banyuwangi':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Blitar':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bojonegoro':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Bondowoso':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Gresik':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Jawa Timur':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(82,141,219,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Jember':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Jombang':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kediri':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Batu':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,197,255,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Blitar':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Kediri':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Madiun':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(74,74,74,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Malang':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Mojokerto':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Pasuruan':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Probolinggo':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Kota Surabaya':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lamongan':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Lumajang':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Madiun':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Magetan':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Malang':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Mojokerto':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Nganjuk':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Ngawi':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pacitan':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pamekasan':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Pasuruan':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Ponorogo':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Probolinggo':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sampang':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sidoarjo':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Situbondo':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Sumenep':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Trenggalek':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,197,255,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tuban':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,144,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Tulungagung':
+                    return {
+                pane: 'pane_Legenda_4',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,84,61,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Legenda_4');
+        map.getPane('pane_Legenda_4').style.zIndex = 404;
+        map.getPane('pane_Legenda_4').style['mix-blend-mode'] = 'normal';
+        var layer_Legenda_4 = new L.geoJson(json_Legenda_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Legenda_4',
+            layerName: 'layer_Legenda_4',
+            pane: 'pane_Legenda_4',
+            onEachFeature: pop_Legenda_4,
+            style: style_Legenda_4_0,
+        });
+        bounds_group.addLayer(layer_Legenda_4);
+        map.addLayer(layer_Legenda_4);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'Legenda<br /><table><tr><td style="text-align: center;"><img src="legend/Legenda_4_Bangkalan0.png" /></td><td>Bangkalan</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Banyuwangi1.png" /></td><td>Banyuwangi</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Blitar2.png" /></td><td>Blitar</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Bojonegoro3.png" /></td><td>Bojonegoro</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Bondowoso4.png" /></td><td>Bondowoso</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Gresik5.png" /></td><td>Gresik</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_JawaTimur6.png" /></td><td>Jawa Timur</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Jember7.png" /></td><td>Jember</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Jombang8.png" /></td><td>Jombang</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Kediri9.png" /></td><td>Kediri</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaBatu10.png" /></td><td>Kota Batu</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaBlitar11.png" /></td><td>Kota Blitar</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaKediri12.png" /></td><td>Kota Kediri</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaMadiun13.png" /></td><td>Kota Madiun</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaMalang14.png" /></td><td>Kota Malang</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaMojokerto15.png" /></td><td>Kota Mojokerto</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaPasuruan16.png" /></td><td>Kota Pasuruan</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaProbolinggo17.png" /></td><td>Kota Probolinggo</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_KotaSurabaya18.png" /></td><td>Kota Surabaya</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Lamongan19.png" /></td><td>Lamongan</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Lumajang20.png" /></td><td>Lumajang</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Madiun21.png" /></td><td>Madiun</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Magetan22.png" /></td><td>Magetan</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Malang23.png" /></td><td>Malang</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Mojokerto24.png" /></td><td>Mojokerto</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Nganjuk25.png" /></td><td>Nganjuk</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Ngawi26.png" /></td><td>Ngawi</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Pacitan27.png" /></td><td>Pacitan</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Pamekasan28.png" /></td><td>Pamekasan</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Pasuruan29.png" /></td><td>Pasuruan</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Ponorogo30.png" /></td><td>Ponorogo</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Probolinggo31.png" /></td><td>Probolinggo</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Sampang32.png" /></td><td>Sampang</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Sidoarjo33.png" /></td><td>Sidoarjo</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Situbondo34.png" /></td><td>Situbondo</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Sumenep35.png" /></td><td>Sumenep</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Trenggalek36.png" /></td><td>Trenggalek</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Tuban37.png" /></td><td>Tuban</td></tr><tr><td style="text-align: center;"><img src="legend/Legenda_4_Tulungagung38.png" /></td><td>Tulungagung</td></tr></table>': layer_Legenda_4,"Google Road": layer_GoogleRoad_3,"Google Hybrid": layer_GoogleHybrid_2,"Google Terrain": layer_GoogleTerrain_1,"Google Satellite": layer_GoogleSatellite_0,}).addTo(map);
+        setBounds();
+        var i = 0;
+        layer_Legenda_4.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NAMOBJ'] !== null?String('<div style="color: #000000; font-size: 7pt; font-family: \'Montserrat Medium\', sans-serif;">' + layer.feature.properties['NAMOBJ']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Legenda_4'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_Legenda_4]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Legenda_4]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Legenda_4]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Legenda_4]);
+        });
+        </script>
+    </body>
+</html>
